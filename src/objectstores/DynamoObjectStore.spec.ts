@@ -43,6 +43,24 @@ describe('Dynamo ObjectStore', () => {
 		})
 	}, 20000)
 
+	/* should allow CREATEing of tables */
+	it('should allow CREATEing of tables', async () => {
+		const result = await DynamoObjectStore.createTable(
+			'TestTable',
+			'Part',
+			'Sort'
+		)
+		expect(result).toBeTruthy()
+		const result2 = await DynamoObjectStore.createTable('TestTable2', 'Part')
+		expect(result2).toBeTruthy()
+		const result3 = await DynamoObjectStore.createTable(
+			'TestTable',
+			'Part',
+			'Sort'
+		)
+		expect(result3).toBeFalsy()
+	})
+
 	/* should allow PUTting of an item with MULTIple keys */
 	it('should allow PUTting of an item with MULTIple keys', async () => {
 		await dbGet(`DELETE FROM ${MultiKey.meta.table}`)
@@ -82,6 +100,8 @@ describe('Dynamo ObjectStore', () => {
 			multiKey.range
 		)
 		expect(data instanceof MultiKey).toBeTruthy()
+		expect((data as MultiKey).hash).toBe(multiKey.hash)
+		expect((data as MultiKey).range).toBe(multiKey.range)
 		expect((data as MultiKey).title).toBe(multiKey.title)
 	})
 
@@ -91,6 +111,7 @@ describe('Dynamo ObjectStore', () => {
 		await DynamoObjectStore.put(singleKey)
 		const data = await DynamoObjectStore.get(SingleKey, singleKey.hash)
 		expect(data instanceof SingleKey).toBeTruthy()
+		expect((data as SingleKey).hash).toBe(singleKey.hash)
 		expect((data as SingleKey).title).toBe(singleKey.title)
 	})
 
@@ -102,6 +123,10 @@ describe('Dynamo ObjectStore', () => {
 		expect(data).toBeDefined()
 		expect(data.items instanceof Array).toBeTruthy()
 		expect(data.items.length).toBeGreaterThan(0)
+		console.log('here', data)
+		expect((data.items[0] as MultiKey).hash).toBe(multiKey.hash)
+		expect((data.items[0] as MultiKey).range).toBe(multiKey.range)
+		expect((data.items[0] as MultiKey).title).toBe(multiKey.title)
 	})
 
 	/* should allow DELETEing of an item by its ID */

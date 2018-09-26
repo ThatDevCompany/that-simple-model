@@ -1,7 +1,6 @@
 const BuildUtils = require('that-build-library').BuildUtils
 
 module.exports = Promise.resolve()
-	.then(() => require('./test'))
 	.then(() => require('./lint'))
 	.then(() => require('./build'))
 	.then(() => BuildUtils.echo('PUBLISHING'))

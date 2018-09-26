@@ -26,7 +26,7 @@ export function InitialiseDynamoDB(): Promise<any> {
 				// prettier-ignore
 				BuildUtils.exec('docker', ['run',
 				'--volume', __dirname + '/../../db:/db',
-				'--publish', '8000:8000',
+				'--publish', '8001:8000',
 				'--detach',
 				'--name', 'thatSimpleORM',
 				'amazon/dynamodb-local', '-jar', 'DynamoDBLocal.jar', '-dbPath', '/db',

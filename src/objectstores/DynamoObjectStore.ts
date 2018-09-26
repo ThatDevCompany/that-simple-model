@@ -1,8 +1,7 @@
-import { classToPlain, plainToClass } from 'class-transformer'
 import * as AWS from 'aws-sdk'
 import * as util from 'util'
-import { MetaModel } from '../model'
 import * as I from '../Interfaces'
+import { DynamoUtils } from '@/DynamoUtils'
 
 /**
  * ObjectStore for persisting to DynamoDB
@@ -28,17 +27,48 @@ export class DynamoObjectStoreClass implements I.IObjectStore {
 
 	/* METHODS */
 	/**
+	 * Create a simple/standard DynamoDB table
+	 */
+	async createTable(
+		table: string,
+		partitionKey: string,
+		sortingKey?: string
+	): Promise<boolean> {
+		let d = this._dynamodb,
+			ks = [],
+			ad = []
+
+		ks.push({ AttributeName: partitionKey, KeyType: 'HASH' })
+		ad.push({ AttributeName: partitionKey, AttributeType: 'S' })
+
+		if (sortingKey) {
+			ks.push({ AttributeName: sortingKey, KeyType: 'RANGE' })
+			ad.push({ AttributeName: sortingKey, AttributeType: 'S' })
+		}
+
+		return util
+			.promisify(d.createTable.bind(d))({
+				TableName: table,
+				KeySchema: ks,
+				AttributeDefinitions: ad,
+				ProvisionedThroughput: {
+					ReadCapacityUnits: 10,
+					WriteCapacityUnits: 10
+				}
+			})
+			.then(() => true)
+			.catch(() => false)
+	}
+
+	/**
 	 * Creates/updates an item in the dynamodb
 	 */
 	async put<T extends I.IModel>(item: T): Promise<T> {
 		let c = this._docClient
 		return util
 			.promisify(c.put.bind(c))({
-				TableName: this._getDynamoTableName(item),
-				Item: {
-					...this._getDynamoKey(item),
-					info: classToPlain<T>(item)
-				}
+				TableName: DynamoUtils.getTableName(item),
+				Item: DynamoUtils.classToDynamo(item)
 			})
 			.then(() => item)
 	}
@@ -54,10 +84,11 @@ export class DynamoObjectStoreClass implements I.IObjectStore {
 		let c = this._docClient
 		return util
 			.promisify(c.get.bind(c))({
-				TableName: this._getDynamoTableName(cls),
-				Key: this._getDynamoKey(cls, partitionKey, sortKey)
+				TableName: DynamoUtils.getTableName(cls),
+				Key: DynamoUtils.getDynamoKey(cls, partitionKey, sortKey)
 			})
-			.then(({ Item }) => plainToClass(cls, Item.info))
+			.then(({ Item }) => DynamoUtils.dynamoToClass(cls, Item))
+			.catch(() => null)
 	}
 
 	/**
@@ -70,12 +101,10 @@ export class DynamoObjectStoreClass implements I.IObjectStore {
 		let c = this._docClient
 		return util
 			.promisify(c.scan.bind(c))({
-				TableName: this._getDynamoTableName(cls)
+				TableName: DynamoUtils.getTableName(cls)
 			})
 			.then(({ Items }) => ({
-				items: /* istanbul ignore next */ (Items || []).map(({ info }) =>
-					plainToClass(cls, /* istanbul ignore next */ info || {})
-				)
+				items: (Items || []).map(Item => DynamoUtils.dynamoToClass(cls, Item))
 			}))
 	}
 
@@ -85,49 +114,8 @@ export class DynamoObjectStoreClass implements I.IObjectStore {
 	async remove<T extends I.IModel>(item: T): Promise<void> {
 		let c = this._docClient
 		return util.promisify(c.delete.bind(c))({
-			TableName: this._getDynamoTableName(item),
-			Key: this._getDynamoKey(item)
+			TableName: DynamoUtils.getTableName(item),
+			Key: DynamoUtils.getDynamoKey(item)
 		})
-	}
-
-	/**
-	 * PRIVATE
-	 * Returns an Dynamo TableName object for a given item or class
-	 */
-	private _getDynamoTableName<T extends I.IModel>(
-		itemOrClass: T | I.IModelClass<T>
-	): any {
-		let meta: MetaModel =
-			typeof itemOrClass === 'object'
-				? (itemOrClass as I.IModel).meta
-				: (itemOrClass as I.IModelClass<T>).meta
-		return meta.table
-	}
-
-	/**
-	 * PRIVATE
-	 * Returns an Dynamo Key object for a given item
-	 */
-	private _getDynamoKey<T extends I.IModel>(
-		itemOrClass: T | I.IModelClass<T>,
-		partitionKey?: string | number,
-		sortingKey?: string | number
-	): any {
-		const isItem = typeof itemOrClass === 'object'
-		const meta: MetaModel = isItem
-			? (itemOrClass as I.IModel).meta
-			: (itemOrClass as I.IModelClass<T>).meta
-
-		const key = {
-			[meta.partitionKey]: isItem
-				? (itemOrClass as I.IModel)[meta.partitionKey]
-				: partitionKey
-		}
-		if (meta.sortingKey) {
-			key[meta.sortingKey] = isItem
-				? (itemOrClass as I.IModel)[meta.sortingKey]
-				: sortingKey
-		}
-		return key
 	}
 }

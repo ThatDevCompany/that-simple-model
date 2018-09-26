@@ -1,7 +1,7 @@
 {
     "name": "that-simple-orm",
     "description": "A very simple ORM for Typescript",
-    "version": "0.0.7",
+    "version": "0.0.11",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -13,9 +13,6 @@
     "scripts": {
         "lint": "node admin/scripts/lint.js",
         "build": "node admin/scripts/build.js",
-        "build:db": "ts-node --require tsconfig-paths/register admin/scripts/build.db.ts",
-        "dynamo:start": "node admin/scripts/dynamo.start.js",
-        "dynamo:stop": "node admin/scripts/dynamo.stop.js",
         "test": "node admin/scripts/test.js",
         "publish": "node admin/scripts/publish.js"
     },
