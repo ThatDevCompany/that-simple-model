@@ -1,5 +1,4 @@
-import { Model, PartitionKey, MetaModel } from '../Model'
-import { IModel } from '../Interfaces'
+import { Model, PrimaryKey, IModel, IMetaModel } from '@/index'
 
 /**
  * An example of a SingleKey model
@@ -9,10 +8,10 @@ import { IModel } from '../Interfaces'
 	table: 'SingleKey'
 })
 export class SingleKey implements IModel {
-	static meta: MetaModel
-	meta: MetaModel
+	static meta: IMetaModel
+	meta: IMetaModel
 
-	@PartitionKey
+	@PrimaryKey
 	hash: string
 
 	title: string

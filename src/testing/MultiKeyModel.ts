@@ -1,5 +1,4 @@
-import { Model, PartitionKey, SortingKey, MetaModel } from '../Model'
-import { IModel } from '../Interfaces'
+import { Model, PrimaryKey, SecondaryKey, IMetaModel, IModel } from '@/index'
 
 /**
  * Example of a MultiKey model
@@ -9,13 +8,13 @@ import { IModel } from '../Interfaces'
 	table: 'MultiKey'
 })
 export class MultiKey implements IModel {
-	static meta: MetaModel
-	meta: MetaModel
+	static meta: IMetaModel
+	meta: IMetaModel
 
-	@PartitionKey
+	@PrimaryKey
 	hash: string
 
-	@SortingKey
+	@SecondaryKey
 	range: string
 
 	title: string
