@@ -1,5 +1,4 @@
 import { IMetaModel } from '@/IMetaModel'
-import { ISearchIndex } from '@/ISearchIndex'
 
 /**
  * Interface for a model definition object
@@ -8,7 +7,6 @@ export interface IModelDef {
 	title?: string
 	description?: string
 	kind?: string
-	indexes?: Array<ISearchIndex>
 }
 
 /**
@@ -36,10 +34,11 @@ export function Model(def: IModelDef = {}) {
 			kind: def.kind || target.name,
 			primaryKey: target.prototype.__primaryKey,
 			secondaryKey: target.prototype.__secondaryKey || null,
-			indexes: def.indexes || []
+			searchables: target.prototype.__searchables || []
 		}
 		target['meta'] = target.prototype.meta = meta
 		delete target.prototype.__primaryKey
 		delete target.prototype.__secondaryKey
+		delete target.prototype.__searchables
 	}
 }

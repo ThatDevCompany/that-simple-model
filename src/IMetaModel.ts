@@ -1,9 +1,6 @@
-import { ISearchIndex } from './ISearchIndex'
-
 /**
  * An interface for an object which contains a collection of properties describing a model
  */
-
 export interface IMetaModel {
 	/**
 	 * The title of the Model
@@ -31,7 +28,7 @@ export interface IMetaModel {
 	secondaryKey: string
 
 	/**
-	 * The additional search indexes required for the Model
+	 * A collection of other searchable attributes
 	 */
-	indexes: Array<ISearchIndex>
+	searchables: Array<string>
 }

@@ -1,5 +1,4 @@
 export * from './IMetaModel'
 export * from './IModel'
 export * from './IModelClass'
-export * from './ISearchIndex'
 export * from './decorators'
