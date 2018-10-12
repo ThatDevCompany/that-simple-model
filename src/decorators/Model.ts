@@ -1,4 +1,15 @@
 import { IMetaModel } from '@/IMetaModel'
+import { ISearchIndex } from '@/ISearchIndex'
+
+/**
+ * Interface for a model definition object
+ */
+export interface IModelDef {
+	title?: string
+	description?: string
+	kind?: string
+	indexes?: Array<ISearchIndex>
+}
 
 /**
  * DECORATOR
@@ -17,16 +28,15 @@ import { IMetaModel } from '@/IMetaModel'
  * 		static meta: IMetaModel
  * }
  */
-export function Model(
-	def: { title?: string; description?: string; kind?: string } = {}
-) {
+export function Model(def: IModelDef = {}) {
 	return function ModelDecorator(target: any) {
 		const meta: IMetaModel = {
 			title: def.title || target.name,
 			description: def.description || '',
 			kind: def.kind || target.name,
 			primaryKey: target.prototype.__primaryKey,
-			secondaryKey: target.prototype.__secondaryKey || null
+			secondaryKey: target.prototype.__secondaryKey || null,
+			indexes: def.indexes || []
 		}
 		target['meta'] = target.prototype.meta = meta
 		delete target.prototype.__primaryKey
