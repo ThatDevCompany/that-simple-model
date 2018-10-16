@@ -26,9 +26,4 @@ export interface IMetaModel {
 	 * The attribute name for the secondary key of the Model
 	 */
 	secondaryKey: string
-
-	/**
-	 * A collection of other searchable attributes
-	 */
-	searchables: Array<string>
 }

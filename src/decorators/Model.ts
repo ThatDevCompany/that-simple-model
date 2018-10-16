@@ -33,12 +33,10 @@ export function Model(def: IModelDef = {}) {
 			description: def.description || '',
 			kind: def.kind || target.name,
 			primaryKey: target.prototype.__primaryKey,
-			secondaryKey: target.prototype.__secondaryKey || null,
-			searchables: target.prototype.__searchables || []
+			secondaryKey: target.prototype.__secondaryKey || null
 		}
 		target['meta'] = target.prototype.meta = meta
 		delete target.prototype.__primaryKey
 		delete target.prototype.__secondaryKey
-		delete target.prototype.__searchables
 	}
 }
