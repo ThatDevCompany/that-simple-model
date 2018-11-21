@@ -1,4 +1,5 @@
 # That Simple Model
+[![CircleCI](https://circleci.com/gh/ThatDevCompany/that-simple-model.svg?style=svg)](https://circleci.com/gh/ThatDevCompany/that-simple-model)
 
 ##  Overview
 A simple set of Model definition Decorators
@@ -35,6 +36,32 @@ class Book implements IModel {
 
     @PrimaryKey
     bookId: string = uuid.v4()
+
+    title: string
+}
+```
+
+### Model decorator
+The model decorator adds a IMetaModel object to the prototype of the class. This provides access to "introspect"
+the meta data for the model.
+
+The title, description and kind can all be set/overriden as part of the Model decorator
+
+```
+@Model({
+    title: 'A Book',
+    description: 'A collection of pages with words on',
+    kind: 'tblBook'
+})
+class Book {
+    static meta: IMetaModel
+    meta: IMetaModel
+
+    @PrimaryKey
+    clientId: string
+
+    @SecondaryKey
+    bookId: string
 
     title: string
 }

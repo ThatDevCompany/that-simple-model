@@ -5,8 +5,7 @@ import { Model, PrimaryKey, SecondaryKey, IMetaModel, IModel } from '@/index'
  */
 @Model({
 	description: 'Description',
-	kind: 'MultiKey',
-	indexes: [{ primaryKey: 'hash', secondaryKey: 'title' }]
+	kind: 'MultiKey'
 })
 export class MultiKey implements IModel {
 	static meta: IMetaModel

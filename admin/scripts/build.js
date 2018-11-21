@@ -5,7 +5,7 @@ module.exports = Promise.resolve()
 	.then(() => BuildUtils.clean('dist'))
 
 	.then(() => BuildUtils.echo('BUILDING'))
-	.then(() => BuildUtils.tsc('tsconfig.prod.json'))
+	.then(() => BuildUtils.tsc('tsconfig.build.json'))
 
 	.then(() => BuildUtils.echo('TIDYING'))
 	.then(() => BuildUtils.removeModuleAlias('@', 'dist'))
