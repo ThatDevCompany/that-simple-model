@@ -1,12 +1,11 @@
-import { Model } from "./Model"
-import { PrimaryKey } from "./PrimaryKey"
-import { SecondaryKey } from "./SecondaryKey"
+import { Model } from './Model'
+import { PrimaryKey } from './PrimaryKey'
+import { SecondaryKey } from './SecondaryKey'
 
 /**
  * Tests for Model
  */
 describe('Model', () => {
-
 	@Model({
 		title: 'Title',
 		description: 'Description',
@@ -31,5 +30,4 @@ describe('Model', () => {
 		const test = new Test()
 		expect((test as any).meta).toBeDefined
 	})
-
 })

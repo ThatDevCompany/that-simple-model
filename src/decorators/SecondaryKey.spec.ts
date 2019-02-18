@@ -1,10 +1,9 @@
-import { SecondaryKey } from "./SecondaryKey"
+import { SecondaryKey } from './SecondaryKey'
 
 /**
  * Tests for SecondaryKey
  */
 describe('SecondaryKey', () => {
-
 	class Test {
 		@SecondaryKey
 		attribute: string
@@ -18,5 +17,4 @@ describe('SecondaryKey', () => {
 		const test = new Test()
 		expect((test as any).__secondaryKey).toBe('attribute')
 	})
-
 })

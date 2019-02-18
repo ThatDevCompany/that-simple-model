@@ -1,7 +1,7 @@
 {
     "name": "that-simple-model",
     "description": "A very simple set of Model decorators for for Typescript",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "license": "MIT",
     "repository": {
         "type": "git",
