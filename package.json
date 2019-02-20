@@ -1,7 +1,7 @@
 {
     "name": "that-simple-model",
     "description": "A very simple set of Model decorators for for Typescript",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -16,7 +16,9 @@
         "test": "node admin/scripts/test.js",
         "publish": "node admin/scripts/publish.js"
     },
-    "dependencies": {},
+    "dependencies": {
+        "class-transformer": "0.2.0"
+    },
     "devDependencies": {
         "@types/jasmine": "^2.8.7",
         "@types/node": "^10.5.8",
